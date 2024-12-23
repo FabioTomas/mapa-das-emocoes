@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="https://cdn.anychart.com/releases/8.13.0/js/anychart-core.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/8.13.0/js/anychart-sunburst.min.js"></script>
+    <script src="./src/emotions.js"></script>
+</head>
+
+<body>
+    <div id="container" style="width: 900px; height: 900px;"></div>
+
+    <script>
+
+        var chart = anychart.sunburst(data, "as-tree");
+
+        chart.labels().fontColor("black");
+        chart.normal().stroke("#404045", 1);
+        chart.labels().position("radial");
+
+        chart.container("container");
+        chart.draw();
+
+    </script>
+</body>
+
+</html>
