@@ -15,11 +15,11 @@
     <script>
 
         var chart = anychart.sunburst(data, "as-tree");
-
+        chart.title("Mapa das emoções");
         chart.labels().fontColor("black");
         chart.normal().stroke("#404045", 1);
         chart.labels().position("radial");
-
+        chart.tooltip().format("{%name}\n{%custom_field}");
         chart.container("container");
         chart.draw();
 
