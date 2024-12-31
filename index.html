@@ -3,27 +3,59 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Document</title>
+    <title>Mapa das emoções</title>
     <script src="https://cdn.anychart.com/releases/8.13.0/js/anychart-core.min.js"></script>
     <script src="https://cdn.anychart.com/releases/8.13.0/js/anychart-sunburst.min.js"></script>
     <script src="./src/emotions.js"></script>
 </head>
 
 <body>
-    <div id="container" style="width: 900px; height: 900px;"></div>
+    <div class="app">
+        <div id="container" class="container"></div>
+        <div>
+            <p>Descrição:</p>
+            <p id="descricao">Selecione um emoção</p>
+        </div>
+    </div>
 
     <script>
 
         var chart = anychart.sunburst(data, "as-tree");
         chart.title("Mapa das emoções");
-        chart.labels().fontColor("black");
+
         chart.normal().stroke("#404045", 1);
+
+        chart.labels().fontColor("black");
         chart.labels().position("radial");
+
+        chart.tooltip().enabled(false);
         chart.tooltip().format("{%name}\n{%custom_field}");
+
         chart.container("container");
         chart.draw();
 
+        var description = document.getElementById("descricao");
+
+
+        chart.listen("pointClick", function (event) {
+            var point = event.point;
+            var tooltipText = point.get("name") + ": " + point.get("custom_field");
+            description.innerText = tooltipText;
+        });
+
     </script>
+
+    <style>
+        .app {
+            display: flex;
+            align-items: center;
+        }
+
+        .container {
+            width: 800px;
+            height: 800px;
+        }
+    </style>
 </body>
 
 </html>
