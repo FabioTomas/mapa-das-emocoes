@@ -12,15 +12,19 @@
 <body>
     <div class="app">
         <div id="container" class="container"></div>
-        <div>
+        <div id="descricao">
             <p>Descrição:</p>
-            <p id="descricao">Selecione um emoção</p>
+            <p id="descricaoLabel">Selecione um emoção</p>
         </div>
     </div>
 
     <script>
+        let drillToItem;
+        let lastDrillToItem;
+        let treeData = anychart.data.tree(data, 'as-table');
+        var chart = anychart.sunburst();
+        chart.data(treeData);
 
-        var chart = anychart.sunburst(data, "as-tree");
         chart.title("Mapa das emoções");
 
         chart.normal().stroke("#404045", 1);
@@ -34,13 +38,47 @@
         chart.container("container");
         chart.draw();
 
-        var description = document.getElementById("descricao");
+        var description = document.getElementById("descricaoLabel");
+        var tooltipText = '';
+        chart.interactivity().selectionMode("single-select");
 
-
-        chart.listen("pointClick", function (event) {
+        chart.listen("pointMouseDown", function (event) {
             var point = event.point;
-            var tooltipText = point.get("name") + ": " + point.get("custom_field");
+
+            tooltipText = point.get("name") + ": " + point.get("custom_field");
             description.innerText = tooltipText;
+
+        });
+
+        function drillDown(data) {
+            chart.data(data);
+            chart.draw();
+        }
+
+        chart.listen("pointMouseUp", function (event) {
+
+            var point = event.point;
+
+            drillToItem = treeData.search('id', point.get('id'));
+
+            if (drillToItem.getChildren().length === 0) {
+                return;
+            }
+            if (drillToItem === lastDrillToItem) {
+
+                chart.drillUp();
+                chart.draw();
+                chart.select([]);
+
+                lastDrillToItem = null;
+
+            } else {
+                chart.drillTo(drillToItem);
+                chart.draw();
+
+                lastDrillToItem = drillToItem;
+            }
+
         });
 
     </script>
@@ -52,8 +90,15 @@
         }
 
         .container {
+            min-width: 800px;
+            min-height: 800px;
             width: 800px;
             height: 800px;
+        }
+
+        p {
+            max-width: 50%;
+            text-wrap: wrap;
         }
     </style>
 </body>
