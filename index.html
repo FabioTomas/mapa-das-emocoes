@@ -15,13 +15,18 @@
         <div id="descricao">
             <p>Descrição:</p>
             <p id="descricaoLabel">Selecione um emoção</p>
+            <button id="registerButton">Registrar emoção</button>
         </div>
     </div>
 
     <script>
+
+        const emotionsCookieName = 'RegisteredEmotions';
+        let registeredEmotions = [];
         let drillToItem;
         let lastDrillToItem;
         let treeData = anychart.data.tree(data, 'as-table');
+        let selectedEmotion;
         var chart = anychart.sunburst();
         chart.data(treeData);
 
@@ -58,9 +63,11 @@
         chart.listen("pointMouseUp", function (event) {
 
             var point = event.point;
-
+            if (point === null) {
+                return;
+            };
             drillToItem = treeData.search('id', point.get('id'));
-
+            selectedEmotion = point.get('id');
             if (drillToItem.getChildren().length === 0) {
                 return;
             }
@@ -81,6 +88,36 @@
 
         });
 
+        var registerButton = document.getElementById('registerButton')
+        registerButton.addEventListener("click", function () {
+            var recoveredCookie = getCookie(emotionsCookieName);
+            if (recoveredCookie !== "") {
+                registeredEmotions = JSON.parse(recoveredCookie);
+            }
+            console.log(registeredEmotions)
+            var currentDate = new Date();
+            currentdate = currentDate.toISOString().replace("T", " ").substring(0, 19);
+            registeredEmotions.push({ Emotion: selectedEmotion, Date: currentdate });
+            var updatedCookie = `${emotionsCookieName}=${JSON.stringify(registeredEmotions)}`;
+            document.cookie = updatedCookie;
+
+        }, false);
+
+        function getCookie(cookieName) {
+            let name = cookieName + "=";
+            let decodedCookie = decodeURIComponent(document.cookie);
+            let ca = decodedCookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
     </script>
 
     <style>
