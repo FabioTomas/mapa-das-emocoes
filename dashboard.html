@@ -1,0 +1,91 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+
+    <!-- AnyChart -->
+    <script src="https://cdn.anychart.com/releases/8.13.0/js/anychart-core.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/8.13.0/js/anychart-pyramid-funnel.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/8.13.0/js/anychart-tag-cloud.min.js"></script>
+
+    <!-- Bootstrap -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"> -->
+    <!-- Project -->
+    <script src="./src/dateManager.js"></script>
+    <script src="./src/cookieManager.js"></script>
+</head>
+
+<body>
+
+    <!-- <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/index.html">Emoções</a>
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/index.html">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/dashboard.html">Dashboard</a>
+                </li>
+            </ul>
+        </div>
+    </nav> -->
+
+    <div id="container" class="container"></div>
+    <div id="tagChartContainer" class="container"></div>
+
+    <script>
+        var data = []
+        var counter = {}
+
+        var registeredEmotions = getCookie();
+
+        var emotions = registeredEmotions.reduce((acc, obj) => {
+            acc.push(obj.Emotion);
+            return acc;
+        }, []);
+        emotions.forEach(function (obj) {
+            var key = JSON.stringify(obj)
+
+            counter[key] = (counter[key] || 0) + 1
+        })
+        var uniqueEmotions = [...new Set(emotions)];
+        uniqueEmotions.forEach((emotion) => {
+
+            data.push({ name: emotion, value: counter[`"${emotion}"`] })
+        });
+
+        var chart = anychart.pyramid(data);
+        chart.title('Pirâmide das emoções');
+        chart.container("container");
+        chart.draw();
+
+
+        var tagCloudData = [];
+        uniqueEmotions.forEach((emotion) => {
+
+            tagCloudData.push({ x: emotion, value: counter[`"${emotion}"`] })
+        });
+
+        tagChart = anychart.tagCloud(tagCloudData, { mode: "by-word" });
+        tagChart.title('Tag Cloud das emoções');
+        tagChart.angles([0]);
+        tagChart.mode('spiral');
+        tagChart.container("tagChartContainer");
+        tagChart.draw();
+
+
+    </script>
+    <style>
+        .container {
+            max-width: 800px;
+            height: 400px;
+        }
+    </style>
+</body>
+
+</html>
