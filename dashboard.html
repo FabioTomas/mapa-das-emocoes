@@ -17,23 +17,14 @@
     <!-- Project -->
     <script src="./src/dateManager.js"></script>
     <script src="./src/cookieManager.js"></script>
+    <link rel="stylesheet" href="./src/css/navbar.css">
 </head>
 
 <body>
-
-    <!-- <nav class="navbar navbar-expand-lg bg-body-tertiary">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="/index.html">Emoções</a>
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/index.html">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/dashboard.html">Dashboard</a>
-                </li>
-            </ul>
-        </div>
-    </nav> -->
+    <div class="input">
+        <button class="value" onclick="location.href='/index.html'">Mapa das emoções</button>
+        <button class="value" onclick="location.href='/dashboard.html'">Dashboard</button>
+    </div>
 
     <div id="container" class="container"></div>
     <div id="tagChartContainer" class="container"></div>
@@ -61,6 +52,7 @@
 
         var chart = anychart.pyramid(data);
         chart.title('Pirâmide das emoções');
+        chart.background().fill('rgb(58, 58, 58)');
         chart.container("container");
         chart.draw();
 
@@ -73,6 +65,7 @@
 
         tagChart = anychart.tagCloud(tagCloudData, { mode: "by-word" });
         tagChart.title('Tag Cloud das emoções');
+        tagChart.background().fill('rgb(58, 58, 58)');
         tagChart.angles([0]);
         tagChart.mode('spiral');
         tagChart.container("tagChartContainer");
@@ -81,6 +74,13 @@
 
     </script>
     <style>
+        body {
+            background-color: rgb(58, 58, 58);
+            font-family: "Roboto", serif;
+            font-weight: 400;
+            font-style: normal;
+        }
+
         .container {
             max-width: 800px;
             height: 400px;
